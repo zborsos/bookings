@@ -1,7 +1,8 @@
 package main
 
 import (
-	"booking/server"
+	"bookings/server"
+	"bookings/dbmodels"
 	"flag"
 	"fmt"
 	"os"
@@ -39,20 +40,15 @@ func main() {
 		fmt.Println(string(sw))
 		os.Exit(0)
 	}
-	/*
-			db, err := db.Connect(conf.PostgresConfig)
-			if err != nil {
-				log.Fatalf("Failed to connect to facilities db: %s", err)
-			}
-
+	
 		if *migrate {
-			db.Migrate("migrations")
+			dbmodels.Migrate("migrations")
 			os.Exit(0)
 		}
-	*/
-	log.Info("Starting up Facilities API ...")
-	server.RunServer(server.ContextParams{
-		DB: db,
+	
+	log.Info("Starting up Bookings API ...")
+	server.RunServer({
+
 	})
 
 	log.Info("Shutting Down")

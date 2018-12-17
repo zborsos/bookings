@@ -1,8 +1,7 @@
 package server
 
 import (
-	"booking/dbmodels"
-	"booking/middleware"
+	"bookings/middleware"
 	"net/http"
 	"regexp"
 
@@ -17,11 +16,6 @@ import (
 
 const commVersion = "0.0.0.1"
 
-// ContextParams are the parameters required to run a Petros server
-type ContextParams struct {
-	DB dbmodels.Interface
-}
-
 // checkHeaders checks x-org-header is set
 func checkHeaders() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -35,6 +29,7 @@ func checkHeaders() gin.HandlerFunc {
 			}
 		}
 		*/
+
 		if userIDstr == "" {
 			c.AbortWithStatus(403)
 			return
@@ -68,7 +63,7 @@ func checkHeaders() gin.HandlerFunc {
 }
 
 // RunServer runs the server
-func RunServer(params ContextParams) {
+func RunServer() {
 	r := CreateRouter(params)
 	err := r.Run(":5072")
 	if err != nil {
@@ -77,7 +72,7 @@ func RunServer(params ContextParams) {
 }
 
 // CreateRouter creates the router
-func CreateRouter(params ContextParams) *gin.Engine {
+func CreateRouter() *gin.Engine {
 
 	r := gin.New()
 
