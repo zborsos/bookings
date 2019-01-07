@@ -4,6 +4,7 @@ import (
 	"bookings/middleware"
 	"net/http"
 	"regexp"
+	"strings"
 
 	"github.com/miketonks/swag"
 	sv "github.com/miketonks/swag-validator"
@@ -21,14 +22,13 @@ func checkHeaders() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		endPointURL := c.Request.URL.String()
 		userIDstr := c.Request.Header.Get("X-Customer")
-		/* IF YOU NEED TO SEE THE HEADER
+		//IF YOU NEED TO SEE THE HEADER
 		for name, headers := range c.Request.Header {
 			name = strings.ToLower(name)
 			for _, h := range headers {
 				log.Debugf("HEADER data - %v:\t%v\n", name, h)
 			}
 		}
-		*/
 
 		if userIDstr == "" {
 			c.AbortWithStatus(403)
@@ -64,8 +64,8 @@ func checkHeaders() gin.HandlerFunc {
 
 // RunServer runs the server
 func RunServer() {
-	r := CreateRouter(params)
-	err := r.Run(":5072")
+	r := CreateRouter()
+	err := r.Run(":5670")
 	if err != nil {
 		log.Fatalf("server exited: %s", err)
 	}
@@ -78,7 +78,7 @@ func CreateRouter() *gin.Engine {
 
 	// set context objects
 	r.Use(func(c *gin.Context) {
-		c.Set("db", params.DB)
+
 		c.Next()
 	})
 

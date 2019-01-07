@@ -23,9 +23,9 @@ func ValidateUUIDs() gin.HandlerFunc {
 			ContextName: "csList",
 			MessageName: "Customer",
 		},
-		"facility": {
-			ContextName: "fyList",
-			MessageName: "Facility",
+		"room": {
+			ContextName: "roomList",
+			MessageName: "Room",
 		},
 		"requestor": {
 			ContextName: "rqList",

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bookings/dbmodels"
 	"bookings/handlers"
 	"net/http"
 
@@ -16,9 +17,9 @@ func bookingsCAPI() []*swagger.Endpoint {
 		Type:   "string",
 	}
 
-	getBookingsCustomer := endpoint.New("GET", "/facility_requests", "Get facility request",
+	getBookingsCustomer := endpoint.New("GET", "/booking_requests", "Get booking request",
 		endpoint.Handler(handlers.GetBookings),
-		endpoint.Description("Get all the facility requests per customer"),
+		endpoint.Description("Get all the booking requests per customer"),
 		endpoint.QueryMap(map[string]swagger.Parameter{
 			"page": {
 				Type:        "integer",
@@ -36,11 +37,11 @@ func bookingsCAPI() []*swagger.Endpoint {
 				Nullable:    true,
 				Description: "comma separated list of data-centers uuids",
 			},
-			"facility": {
+			"booking": {
 				Type:        "array",
 				Items:       &itmUUID,
 				Nullable:    true,
-				Description: "comma separated list of facilities uuids",
+				Description: "comma separated list of booking uuids",
 			},
 			"requestor": {
 				Type:        "array",
@@ -68,32 +69,32 @@ func bookingsCAPI() []*swagger.Endpoint {
 			},
 		}),
 		endpoint.Response(http.StatusOK, []dbmodels.Booking{}, "Success"),
-		endpoint.Tags("Facility Requests CAPI"),
+		endpoint.Tags("Booking Requests CAPI"),
 	)
-	getBookingCustomer := endpoint.New("GET", "/facility_requests/{id}", "Get facility request",
+	getBookingCustomer := endpoint.New("GET", "/booking_requests/{id}", "Get booking request",
 		endpoint.Handler(handlers.GetBooking),
-		endpoint.Description("Get facility request by its ID"),
+		endpoint.Description("Get booking request by its ID"),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Path("id", "string", "uuid", "facility request id"),
+		endpoint.Path("id", "string", "uuid", "booking request id"),
 		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "Success"),
-		endpoint.Tags("Facility Requests CAPI"),
+		endpoint.Tags("Booking Requests CAPI"),
 	)
-	postBookingCustomer := endpoint.New("POST", "/facility_requests", "Create a facility request",
+	postBookingCustomer := endpoint.New("POST", "/booking_requests", "Create a booking request",
 		endpoint.Handler(handlers.PostBooking),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Description("Create a facility request"),
-		endpoint.Body(dbmodels.BookingPost{}, "facility request post body", true),
-		endpoint.Response(http.StatusOK, dbmodels.Facility{}, "SUCCESS"),
-		endpoint.Tags("Facility Requests CAPI"),
+		endpoint.Description("Create a booking request"),
+		endpoint.Body(dbmodels.BookingPost{}, "booking request post body", true),
+		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "SUCCESS"),
+		endpoint.Tags("Booking Requests CAPI"),
 	)
-	patchBookingCustomer := endpoint.New("PATCH", "/facility_requests/{id}", "Update a facility request",
+	patchBookingCustomer := endpoint.New("PATCH", "/booking_requests/{id}", "Update a booking request",
 		endpoint.Handler(handlers.PatchBooking),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Path("id", "string", "uuid", "facility request id"),
-		endpoint.Description("Update a facility request"),
-		endpoint.Body(dbmodels.BookingPatch{}, "facility request patch body", true),
+		endpoint.Path("id", "string", "uuid", "booking request id"),
+		endpoint.Description("Update a booking request"),
+		endpoint.Body(dbmodels.BookingPatch{}, "booking request patch body", true),
 		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "UPDATED"),
-		endpoint.Tags("Facility Requests CAPI"),
+		endpoint.Tags("Booking Requests CAPI"),
 	)
 	return []*swagger.Endpoint{
 		getBookingsCustomer,
@@ -108,9 +109,9 @@ func bookingsPAPI() []*swagger.Endpoint {
 		Type:   "string",
 	}
 
-	getBookingsProvider := endpoint.New("GET", "/provider/facility_requests", "Get facility request",
+	getBookingsProvider := endpoint.New("GET", "/provider/booking_requests", "Get booking request",
 		endpoint.Handler(handlers.GetBookingsPAPI),
-		endpoint.Description("Get all the facility requests per customer"),
+		endpoint.Description("Get all the booking requests per customer"),
 		endpoint.QueryMap(map[string]swagger.Parameter{
 			"page": {
 				Type:        "integer",
@@ -128,13 +129,13 @@ func bookingsPAPI() []*swagger.Endpoint {
 				Nullable:    true,
 				Description: "comma separated list of data-centers uuids",
 			},
-			"facility": {
+			"booking": {
 				Type: "array",
 				Items: &swagger.Items{
 					Format: "uuid",
 					Type:   "string"},
 				Nullable:    true,
-				Description: "comma separated list of facilities uuids",
+				Description: "comma separated list of booking uuids",
 			},
 			"customer": {
 				Type:        "array",
@@ -168,32 +169,32 @@ func bookingsPAPI() []*swagger.Endpoint {
 			},
 		}),
 		endpoint.Response(http.StatusOK, []dbmodels.Booking{}, "Success"),
-		endpoint.Tags("Facility Requests PAPI"),
+		endpoint.Tags("Booking Requests PAPI"),
 	)
-	getBookingProvider := endpoint.New("GET", "/provider/facility_requests/{id}", "Get facility request",
-		endpoint.Handler(handlers.GetBookingPAPI),
-		endpoint.Description("Get facility request by its ID"),
+	getBookingProvider := endpoint.New("GET", "/provider/booking_requests/{id}", "Get booking request",
+		endpoint.Handler(handlers.GetBooking),
+		endpoint.Description("Get booking request by its ID"),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Path("id", "string", "uuid", "facility request id"),
+		endpoint.Path("id", "string", "uuid", "booking request id"),
 		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "Success"),
-		endpoint.Tags("Facility Requests PAPI"),
+		endpoint.Tags("Booking Requests PAPI"),
 	)
-	postBookingProvider := endpoint.New("POST", "/provider/facility_requests", "Create a facility request",
+	postBookingProvider := endpoint.New("POST", "/provider/booking_requests", "Create a booking request",
 		endpoint.Handler(handlers.PostBookingPAPI),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Description("Create a facility request"),
-		endpoint.Body(dbmodels.BookingPost{}, "facility request post body", true),
-		endpoint.Response(http.StatusOK, dbmodels.Facility{}, "SUCCESS"),
-		endpoint.Tags("Facility Requests PAPI"),
+		endpoint.Description("Create a booking request"),
+		endpoint.Body(dbmodels.BookingPost{}, "booking request post body", true),
+		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "SUCCESS"),
+		endpoint.Tags("Booking Requests PAPI"),
 	)
-	patchBookingProvider := endpoint.New("PATCH", "/provider/facility_requests/{id}", "Update a facility request",
+	patchBookingProvider := endpoint.New("PATCH", "/provider/booking_requests/{id}", "Update a booking request",
 		endpoint.Handler(handlers.PatchBookingPAPI),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Path("id", "string", "uuid", "facility request id"),
-		endpoint.Description("Update a facility request"),
-		endpoint.Body(dbmodels.BookingPatch{}, "facility request patch body", true),
+		endpoint.Path("id", "string", "uuid", "booking request id"),
+		endpoint.Description("Update a booking request"),
+		endpoint.Body(dbmodels.BookingPatch{}, "booking request patch body", true),
 		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "UPDATED"),
-		endpoint.Tags("Facility Requests PAPI"),
+		endpoint.Tags("Booking Requests PAPI"),
 	)
 	return []*swagger.Endpoint{
 		getBookingsProvider,
@@ -203,22 +204,22 @@ func bookingsPAPI() []*swagger.Endpoint {
 	}
 }
 func bookingsSAPI() []*swagger.Endpoint {
-	postBookingSystem := endpoint.New("POST", "/system/facility_requests", "Create a facility request",
+	postBookingSystem := endpoint.New("POST", "/system/booking_requests", "Create a booking request",
 		endpoint.Handler(handlers.PostBookingSAPI),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Description("Create a facility request"),
-		endpoint.Body(dbmodels.BookingPost{}, "facility request post body", true),
-		endpoint.Response(http.StatusOK, dbmodels.Facility{}, "SUCCESS"),
-		endpoint.Tags("Facility Requests SAPI"),
+		endpoint.Description("Create a booking request"),
+		endpoint.Body(dbmodels.BookingPost{}, "booking request post body", true),
+		endpoint.Response(http.StatusOK, dbmodels.Booking{}, "SUCCESS"),
+		endpoint.Tags("Booking Requests SAPI"),
 	)
 
-	deleteBookingSystem := endpoint.New("DELETE", "/restricted/facility_requests/{id}", "Delete facility request",
+	deleteBookingSystem := endpoint.New("DELETE", "/restricted/booking_requests/{id}", "Delete booking request",
 		endpoint.Handler(handlers.DeleteBookingSystem),
-		endpoint.Description("Delete facility request by its ID"),
+		endpoint.Description("Delete booking request by its ID"),
 		endpoint.Query("dc_id", "string", "uuid", "data_center id", false),
-		endpoint.Path("id", "string", "uuid", "facility request id"),
-		endpoint.Response(http.StatusNoContent, "Success", "Successful facility request removal"),
-		endpoint.Tags("Facility Requests SAPI"),
+		endpoint.Path("id", "string", "uuid", "booking request id"),
+		endpoint.Response(http.StatusNoContent, "Success", "Successful booking request removal"),
+		endpoint.Tags("Booking Requests SAPI"),
 	)
 
 	return []*swagger.Endpoint{

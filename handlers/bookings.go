@@ -39,12 +39,11 @@ func GetBooking(c *gin.Context) {
 
 // GetBookings returns ...
 func GetBookings(c *gin.Context) {
-	log.Info("GetFacility Requests")
+	log.Info("GetBookings Requests")
 
 	perPage := c.MustGet("per_page").(int)
 	pageNumber := c.MustGet("page_number").(int)
 
-	allowedDCs := c.MustGet("AuthorisedDCs").([]uuid.UUID)
 	actor := c.MustGet("workflowActor").(string)
 	data, total, err := dbmodels.GetBookings(actor)
 	if err != nil {
@@ -71,7 +70,7 @@ func GetBookings(c *gin.Context) {
 
 // GetBookingsPAPI returns ...
 func GetBookingsPAPI(c *gin.Context) {
-	log.Info("GetFacility Requests")
+	log.Info("GetBookingsPAPI Requests")
 
 	var perPage, pageNumber int
 	if pp, exists := c.Get("per_page"); exists {
@@ -81,7 +80,6 @@ func GetBookingsPAPI(c *gin.Context) {
 		pageNumber = p.(int)
 	}
 
-	allowedDCs := c.MustGet("AuthorisedDCs").([]uuid.UUID)
 	actor := c.MustGet("workflowActor").(string)
 	data, total, err := dbmodels.GetBookings(actor)
 
@@ -113,7 +111,6 @@ func PostBooking(c *gin.Context) {
 	body.CustomerID = c.MustGet("customerID").(uuid.UUID)
 	body.RequestorID = c.MustGet("UserID").(uuid.UUID)
 
-	actor := c.MustGet("workflowActor").(string)
 	response, state, err := dbmodels.PostBooking(&body)
 	if err != nil {
 		log.Errorf("\nError Posting FR %v \n", err)
@@ -132,14 +129,13 @@ func PostBookingPAPI(c *gin.Context) {
 	var body dbmodels.BookingPost
 	err := c.MustBindWith(&body, binding.JSON)
 	if err != nil {
-		log.Errorf("Post Facility Request failed %v", err.Error())
+		log.Errorf("Post PostBookingPAPI Request failed %v", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	body.CustomerID = c.MustGet("customerID").(uuid.UUID)
 	body.RequestorID = c.MustGet("UserID").(uuid.UUID)
 
-	actor := c.MustGet("workflowActor").(string)
 	response, state, err := dbmodels.PostBooking(&body)
 	if err != nil {
 		log.Errorf("Error PAPI Post FR %v", err)
@@ -173,7 +169,6 @@ func PatchBooking(c *gin.Context) {
 
 	var response *dbmodels.Booking
 
-	actor := c.MustGet("workflowActor").(string)
 	response, state, err := dbmodels.PatchBooking(&body, id)
 
 	if err != nil {
@@ -204,7 +199,7 @@ func PatchBookingPAPI(c *gin.Context) {
 		return
 	}
 	var response *dbmodels.Booking
-	actor := c.MustGet("workflowActor").(string)
+
 	response, state, err := dbmodels.PatchBooking(&body, id)
 
 	if err != nil {
@@ -233,7 +228,6 @@ func PostBookingSAPI(c *gin.Context) {
 	body.CustomerID = c.MustGet("customerID").(uuid.UUID)
 	body.RequestorID = c.MustGet("UserID").(uuid.UUID)
 
-	actor := c.MustGet("workflowActor").(string)
 	response, state, err := dbmodels.PostBooking(&body)
 	if err != nil {
 		log.Errorln(err)
