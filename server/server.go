@@ -31,7 +31,7 @@ func checkHeaders() gin.HandlerFunc {
 		}
 
 		if userIDstr == "" {
-			c.AbortWithStatus(403)
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "user id mandatory"})
 			return
 		}
 		userID, err := uuid.FromString(userIDstr)
